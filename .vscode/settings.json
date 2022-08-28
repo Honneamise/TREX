@@ -1,0 +1,31 @@
+{
+    "files.associations": {
+        "MAIN.C": "cpp",
+        "BGIDEMO.C": "cpp",
+        "CORE.C": "cpp",
+        "BASE.C": "cpp",
+        "CBAR.C": "cpp",
+        "DRAW.C": "cpp",
+        "IMAGE.C": "cpp",
+        "EXT.C": "cpp",
+        "EXTS.C": "cpp",
+        "TIME.H": "cpp",
+        "INTRO.C": "cpp",
+        "MANAGER.C": "cpp",
+        "UNIT.C": "cpp",
+        "STATE.C": "cpp",
+        "BASE.H": "cpp",
+        "UNIT.H": "cpp",
+        "EXT.H": "cpp",
+        "CORE.H": "cpp",
+        "INTRO.H": "cpp",
+        "INTRO copy.C": "cpp",
+        "OUTRO.C": "cpp",
+        "OVER.C": "cpp",
+        "MANAGER.H": "cpp",
+        "STATE.H": "cpp",
+        "GAME.C": "cpp",
+        "UTILS.C": "cpp",
+        "cmath": "cpp"
+    }
+}
