@@ -44,7 +44,7 @@ typedef struct Core
 } Core;
 
 /* VARIABLES */
-static Core core = {0};
+static Core CORE = {0};
 
 static byte PIXEL_MASK[4] = { MASK_0, MASK_1, MASK_2, MASK_3 };
 
@@ -364,16 +364,16 @@ void _SwapBuffers()
     while (inportb(0x3DA) & 0x08);
     while (!(inportb(0x3DA) & 0x08));
 
-    movedata(FP_SEG(core.buffer_0), FP_OFF(core.buffer_0), FP_SEG(CGA_0), FP_OFF(CGA_0), 8000);
-    movedata(FP_SEG(core.buffer_1), FP_OFF(core.buffer_1), FP_SEG(CGA_1), FP_OFF(CGA_1), 8000);
+    movedata(FP_SEG(CORE.buffer_0), FP_OFF(CORE.buffer_0), FP_SEG(CGA_0), FP_OFF(CGA_0), 8000);
+    movedata(FP_SEG(CORE.buffer_1), FP_OFF(CORE.buffer_1), FP_SEG(CGA_1), FP_OFF(CGA_1), 8000);
 }
 
 /**********/
 void _SoundUpdate()
 {
-    if(TimerGet(&core.sound_timer) > core.sound_len)
+    if(TimerGet(&CORE.sound_timer) > CORE.sound_len)
     {
-        TimerStop(&core.sound_timer);
+        TimerStop(&CORE.sound_timer);
         StopSound();
     }
 }
@@ -384,18 +384,18 @@ void Init()
 {
     union REGS regs = {0};
 
-    core.buffer_0 = calloc(8000,sizeof(byte));
-    core.buffer_1 = calloc(8000,sizeof(byte));
+    CORE.buffer_0 = calloc(8000,sizeof(byte));
+    CORE.buffer_1 = calloc(8000,sizeof(byte));
 
     regs.h.ah = 0x0F;
     int86(0x10, &regs, &regs );
-    core.restore_mode = regs.h.al;
+    CORE.restore_mode = regs.h.al;
 
     regs.h.ah = 0x00;
     regs.h.al = 0x04;
     int86(0x10, &regs, &regs );
 
-    core.sound_timer = TimerInit();
+    CORE.sound_timer = TimerInit();
 
     srand(time(NULL));
 }
@@ -406,11 +406,11 @@ void Close()
     union REGS regs = {0};
 
     regs.h.ah = 0x00;
-    regs.h.al = core.restore_mode;
+    regs.h.al = CORE.restore_mode;
     int86(0x10, &regs, &regs);
 
-    free(core.buffer_0);
-    free(core.buffer_1);
+    free(CORE.buffer_0);
+    free(CORE.buffer_1);
 
     StopSound();
 }
@@ -439,14 +439,14 @@ void Clear(byte c)
 {
     byte b = (c<<6) + (c<<4) + (c<<2) + c;
     
-	memset(core.buffer_0, b, 8000);
-	memset(core.buffer_1, b, 8000);
+	memset(CORE.buffer_0, b, 8000);
+	memset(CORE.buffer_1, b, 8000);
 }
 
 /**********/
 void Color(byte c)
 {
-	core.color = c << 6;
+	CORE.color = c << 6;
 }
 
 /**********/
@@ -462,10 +462,10 @@ void Pixel(int x, int y)
 	p_index = x%4;
 	b_index = x >> 2;
 
-    c = core.color >> (p_index << 1);
+    c = CORE.color >> (p_index << 1);
 
-	p = core.buffer_0;
-	if(y & 0x01) { p = core.buffer_1; }
+	p = CORE.buffer_0;
+	if(y & 0x01) { p = CORE.buffer_1; }
 
 	p += 80*(y >> 1) + b_index ;
 
@@ -755,11 +755,11 @@ void Sound(int note, float len)
 {
     byte b = 0;
 
-    if(core.sound_timer.started) { return; }
+    if(CORE.sound_timer.started) { return; }
 
-    core.sound_len = len;
+    CORE.sound_len = len;
 
-    TimerStart(&core.sound_timer);
+    TimerStart(&CORE.sound_timer);
 
     if(note)
     { 
@@ -782,11 +782,11 @@ void StopSound()
 
     outportb(0x61, (b & 0xFC));     /* un-set bit 0 and 1, send back data */               
 
-    TimerStop(&core.sound_timer);
+    TimerStop(&CORE.sound_timer);
 }
 
 /**********/
 int SoundPlaying()
 {
-    return core.sound_timer.started;
+    return CORE.sound_timer.started;
 }
