@@ -12,7 +12,7 @@ Folders content :
 
 - SRC : main program sources 
 
-- RES : reources folder
+- RES : resources folder
 
 ## Build and run
 To start DOSBOX use 
